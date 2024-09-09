@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { useState } from 'react';
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 // Parte 1
 import Greetings from './components/Greetings';
@@ -11,19 +12,29 @@ import ToggleText from './components/ToggleText';
 import DynamicForm from './components/DynamicForm';
 import ClickCounter from './components/ClickCounter';
 
+// Parte 3
+import RegistrationForm from './components/RegistrationForm';
+import ThemeSwitcher from './components/ThemeSwitcher';
+import AlertButton from './components/AlertButton';
+
 export default function App() {
+
+  const [RegistrationData, setRegistrationData] = useState(null);
+  const handleRegistration = (data) => {
+    setRegistrationData(data);
+  };
+
+  const [isDark, setIsDark] = useState(false);
+  const handleThemeChange = (newTheme) => {
+    setIsDark(newTheme);
+  }
+  const appStyles = isDark ? styles.darkContainer : styles.lightContainer;
+
   return (
-    <View style={styles.container}>
-
-      <Image
-        style={{ width: 100, height: 100, marginBottom: 20 }}
-        source={{
-          uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Am%C3%A9rica_de_Cali_a%C3%B1os_40s.svg/600px-Am%C3%A9rica_de_Cali_a%C3%B1os_40s.svg.png',
-        }} />
-
+    <ScrollView contentContainerStyle={appStyles}>
       {/* Ejercicio 1.1*/}
       <View style={{ marginBottom: 20 }}>
-        <Greetings name="Lola" />
+        <Greetings name="Alexander" />
       </View>
 
       {/* Ejercicio 1.2*/}
@@ -46,16 +57,42 @@ export default function App() {
       {/* Ejercicio 2.3*/}
       <ClickCounter />
 
+      {/* Ejercicio 3.1*/}
+      
+      <RegistrationForm onSubmit={handleRegistration} />
+      {RegistrationData && (
+        <View style={{marginBottom: 20}}>
+          <Text>Nombre: {RegistrationData.name}</Text>
+          <Text>Correo: {RegistrationData.email}</Text>
+          <Text>Contraseña: {RegistrationData.password}</Text>
+        </View>
+      )}
+
+      {/* Ejercicio 3.2*/}
+      <ThemeSwitcher onThemeChange={handleThemeChange} />
+
+      {/* Ejercicio 3.3*/}
+      <AlertButton message="Albion Online es un MMORPG no lineal, en el que escribes tu propia historia sin limitarte a seguir un camino prefijado, explora un amplio mundo abierto con 5 biomas únicos, todo cuanto hagas tendrá su repercusión en el mundo, con la economía orientada al jugador de Albion, los jugadores crean prácticamente todo el equipo a partir de los recursos que consiguen, el equipo que llevas define quien eres, cambia de arma y armadura para pasar de caballero a mago, o juega como una mezcla de ambas clases, aventúrate en el mundo abierto frente a los habitantes y las criaturas de Albion, inicia expediciones o adéntrate en mazmorras en las que encontrarás enemigos aún más difíciles, enfréntate a otros jugadores en encuentros en el mundo abierto, lucha por los territorios o por ciudades enteras en batallas tácticas, relájate en tu isla privada, donde podrás construir un hogar, cultivar cosechas y criar animales, únete a un gremio, todo es mejor cuando se trabaja en grupo, adéntrate ya en el mundo de Albion y escribe tu propia historia" />
+
       <StatusBar style="auto" />
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
+  lightContainer: {
+    paddingTop: 50,
+    flexGrow: 1,
     justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  }, 
+  darkContainer: {
+    flexGrow: 1,
+    paddingTop: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#333', 
+    color: '#fff',
   },
 });
